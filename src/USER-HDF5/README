@@ -1,0 +1,18 @@
+The HDF5 package adds a dump_hdf5 command that allows for parallel HDF5 dumps.
+
+Using this package requires that the TyphonIO format library for HDF5 
+as well as HDF5 version 1.8.x are downloaded and installed on your system.
+zlib is also required. The libaries can be installed in lib/hdf5 or elsewhere
+on your system, which must be done before building LAMMPS with this package.
+
+Details on the download, build and installation process for TyphonIO and the 
+other libraries are given in the lib/hdf5/README file.
+
+Once you have successfully built LAMMPS with this package and the TyphonIO
+library you can test it using an input file from the examples dir:
+
+./lmp_intel < lammps/examples/hdf5/in.obstacle.hdf5
+
+The dump_hdf5 package was written by Duncan Harris (AWE plc).
+
+

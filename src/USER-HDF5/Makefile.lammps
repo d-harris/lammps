@@ -1,0 +1,26 @@
+# This file contains the hooks to build and link LAMMPS with the TyphonIO
+# library so that a LAMMPS input script can dump a HDF5 file,
+# via the dump_hdf5 command.
+# 
+# See the README in this directory for more info on installing TyphonIO.
+# 
+# When you build LAMMPS with the HDF5 package installed, it will use the
+# 3 settings in this file.  They should be set as follows.
+# 
+# hdf5_SYSINC = a path to the TyphonIO and HDF5 1.8.5 include files
+# hdf5_SYSLIB = the TyphonIO, HDF5 1.8.5 and zlib libraries
+# hdf5_SYSPATH = a path to the TyphonIO, HDF5 1.8.5 and zlib libraries
+
+# -----------------------------------------------------------
+
+# Settings that the LAMMPS build will import when this package is installed
+
+hdf5_SYSINC = -I${TIO_DIR}/include -I${HDF_DIR}/include
+hdf5_SYSLIB = -ltyphonio -lhdf5 -lz
+hdf5_SYSPATH = -L${TIO_DIR}/lib -L${HDF_DIR}/lib -L${HDF_DIR}/lib64 -L${ZLIB_DIR}
+
+# Set these to the locations of the libraries
+COM_PATH_P = /prod/$(HPC_SYSTEM)/$(HPC_ARCH)/$(HPC_COMPILER)/$(HPC_MPI)
+TIO_DIR =$(COM_PATH_P)/codes/typhonio/1.6
+HDF_DIR =$(COM_PATH_P)/external/hdf5/1.8.5
+ZLIB_DIR=.

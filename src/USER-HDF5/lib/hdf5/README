@@ -1,0 +1,125 @@
+This directory contains links to the TyphonIO, HDF5 and zlib libraries which 
+are required to use the USER-HDF5 package.
+
+TyphonIO is freely available from:
+
+   https://github.com/UK-MAC/typhonio
+
+The Hierarchical Data Format (HDF5) 1.8.x is freely available from the HDF group:
+
+   http://www.hdfgroup.org
+
+zlib is also required. This is commonly found in /usr/lib64.
+Alternatively, it may be downloaded from:
+
+   http://www.zlib.net
+
+For parallel TyphonIO, an implementation of the MPI message-passing library
+is required.
+
+
+HDF5 Installation:
+==================
+Full details on the installation of HDF5 are provided with the library, but
+the quick guide is reproduced here:
+
+The following steps can be used to configure, build, test, and install
+the HDF5 Library, header files, and support programs. 
+For example, to install HDF5 version X.Y.Z at location /usr/local/hdf5,
+use the following steps.
+
+   $ gunzip < hdf5-X.Y.Z.tar.gz | tar xf -
+   $ cd hdf5-X.Y.Z
+
+To configure hdf5 for build and install run the configure command.
+Use "--prefix=" to set the installation location.
+Please see the HDF5 README for more details.
+
+For example, to install a parallel build of HDF5 with zlib support in /local/usr/lammps/lib/hdf5
+
+   $ ./configure --prefix=/local/usr/lammps/lib/hdf5 CC=mpicc \
+         CFLAGS="-O2 -DMPICH_IGNORE_CXX_SEEK"                 \
+         CXX='mpicxx' CXXFLAGS="-O2 -DMPICH_IGNORE_CXX_SEEK"  \
+         CPPFLAGS="-O2 -DMPICH_IGNORE_CXX_SEEK"               \
+         --enable-parallel  --with-zlib
+
+Once configure has been run, use these commands to build, check and install hdf5.
+   $ make
+   $ make check                # run test suite.
+   $ make install
+   $ make check-install        # verify installation.
+
+zlib Installation:
+==================
+Full details on the installation of zlib are provided with the library.
+For ease of use they are reproduced here:
+
+To compile and test, type:
+   ./configure; make test
+
+To install /usr/local/lib/libz.* and /usr/local/include/zlib.h, type:
+   make install
+To install in $HOME instead of /usr/local, use:
+   make install prefix=$HOME
+
+
+Installing TyphonIO
+===================
+
+1) Configuration
+================
+
+Modify the TyphonIO src/Makefile.inc for your specific compiler options/flags.
+
+Set the build environment to recognise your specific compiler by using the environment
+variable HPC_COMPILER. Currently supported compilers, with the options to use, include:
+
+*  gcc   - GNU Compiler 
+*  intel - Intel Compiler
+*  pgi   - Portland Group PGI compiler
+*  xl    - IBM XL
+
+   e.g. 
+     export HPC_COMPILER=gcc
+
+   alternatively this can be set as part of the make command (see section 2) using:
+
+     make HPC_COMPILER=gcc
+
+Edit src/Makefile to specify the HDF5 library path, HDF5_DIR, 
+and PROD_DIR to set the path of the build directory
+
+   e.g. 
+     PROD_DIR=/local/usr/lammps/lib/hdf5/typhonio/build
+     HDF5_DIR=/usr/local/hdf5
+
+alternatively, pass these into the make command as above for the compiler.
+
+2) Compilation
+==============
+
+Full options for building TyphonIO can be displayed by typing "make" in the src directory.
+This will give a list of compile options. It is good practice to check the current
+TyphonIO configuration using "make config" before building.
+
+To build a parallel version for use with parallel LAMMPS:
+
+  $ cd src
+  $ make install USEMPI=1 NOF90=1 HPC_COMPILER=<[gcc/intel/pgi/xl]> HDF5_DIR=<path/to/hdf5>  \
+         PROD_DIR=<path/to/install> 
+
+============================================================
+
+Building Lammps with TyphonIO
+=============================
+
+Edit the Makefile.lammps in src/USER-HDF5 to point to the libraries
+that you have installed above.
+
+When these steps are complete you can build LAMMPS with the USER-HDF5
+package installed:
+
+% cd lammps/src
+% make yes-USER-HDF5
+% make mpi (or whichever target you wish)
+

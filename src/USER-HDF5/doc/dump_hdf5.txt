@@ -1,0 +1,68 @@
+"LAMMPS WWW Site"_lws - "LAMMPS Documentation"_ld - "LAMMPS Commands"_lc :c
+
+:link(lws,http://lammps.sandia.gov)
+:link(ld,Manual.html)
+:link(lc,Section_commands.html#comm)
+
+:line
+
+dump_hdf5 command :h3
+
+[Syntax:]
+
+dump_hdf5 ID group-ID hdf5 N file  args :pre
+
+ID = user-assigned name for the dump :ulb,l
+group-ID = ID of the group of atoms to be dumped - Currently must be set to 'all' :l
+N = dump every this many timesteps :l
+filename = name of file to write dump info to :l
+           in the format 'name.h5' or just 'name'. Files are renamed to name.h5
+           * can be used to specify one file per dump (the * is renamed to the current timestep)
+           NOTE that .bin, .gz and % are NOT allowed in the filename.
+args = list of atom attributes
+    possible attributes = mesh_only, mass, vx, vy, vz, fx, fy, fz, q, c_ID, c_ID[N] 
+      mesh_only = atom positions and types only (default if no attributes given)
+      mass = atom mass
+      vx,vy,vz = atom velocities
+      fx,fy,fz = forces on atoms
+      q = atom charge
+      c_ID = per-atom vector calculated by a compute with ID
+      c_ID[N] = Nth column of per-atom array calculated by a compute with ID
+
+[Examples:]
+
+dump   2b all hdf5 500 dumpfile
+dump    1 all hdf5 500 dumpfile fx, vx, c_PE1
+dump snap all hdf5 100 dump.hdf5.*.h5 mass fx fy fz c_Stress[2]
+
+[Description:]
+
+Dumps a snapshot of atom quantities to a parallel HDF5 file every N timesteps.
+Periodic boundary conditions are applied.
+
+IMPORTANT NOTE: The package does not currently allow for subsets of atoms to be dumped.
+The dump interval, N, can be changed, as for a standard dump.
+Dump filenames can contain one wildcard character.  If a "*"
+character appears in the filename, then one file per snapshot is
+written and the "*" character is replaced with the timestep value.
+For example, dump.*.h5 becomes dump.0.h5, dump.10000.h5,
+
+:line
+
+Details of the attributes are given in the "dump"_dump.html command.
+
+[Restrictions:]
+
+This package does not allow for subsets of atoms to be dumped.
+NOTE that .bin, .gz and % are NOT allowed in the filename.
+
+This dump style is part of the USER-HDF5 package.  It is only enabled if
+LAMMPS was built with that package.  See the "Making
+LAMMPS"_Section_start.html#start_3 section for more info.
+
+[Related commands:]
+
+"dump"_dump.html
+
+[Default:] none
+
